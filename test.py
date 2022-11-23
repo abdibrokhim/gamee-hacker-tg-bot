@@ -1,5 +1,3 @@
-# for production, sold
-
 # import below, to work Telegram Bot with Django Rest Framework properly
 # start
 
