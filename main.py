@@ -23,6 +23,8 @@ from asgiref.sync import sync_to_async
 from telegram import (
     Update,
     ReplyKeyboardMarkup,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
 )
 
 from telegram.ext import (
@@ -50,10 +52,18 @@ TELEGRAM_BOT_TOKEN = ""  # test token
 
 MAIN_MENU_KEYBOARD = [['🎮 New Game', '🍭 Balance'], ['🛒 Buy Candy']]
 ONE_HACK_COST = 10
+CANDY_COST = 1.5
 GAME_URL = "https://prizes.gamee.com/game-bot/"
 
-VISA_CARD_NUMBER = ""
+CHANNEL_LINK = "https://t.me/prmngr"
+CHANNEL_USERNAME = "@prmngr"
+
+DEVELOPER = ""
 SUPPORT_BOT = ""
+
+VISA_CARD_NUMBER = ""
+BITCOIN_ADDRESS = ""
+ETHEREUM_ADDRESS = ""
 
 
 def get_date():
@@ -149,6 +159,14 @@ def _get_clients():
     return models.TGClient.objects.all().values()
 
 
+def is_joined(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    try:
+        return update.message.new_chat_members[0].username == CHANNEL_USERNAME
+    except Exception as e:
+        print(e)
+        return False
+
+
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     context.user_data['id'] = user.id
@@ -159,13 +177,22 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await _post_candy(context.user_data)
 
     await update.message.reply_text('🌝 Was-sap, ' + user.first_name + '!')
+    
     await update.message.reply_text(
-        'Choose an option:',
+        "⬇️ Please, Join Our Channel! ⬇️",
+        reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton('↗️ Join Channel ↗️', url=CHANNEL_LINK)]]))
+
+    # _is_joined = await context.bot.get_chat_member(CHANNEL_USERNAME, user.id).status == 'member'
+    # print("_is_joined: ", _is_joined)
+
+    # if _is_joined:
+    await update.message.reply_text(
+        '\nChoose an option:',
         reply_markup=ReplyKeyboardMarkup(MAIN_MENU_KEYBOARD, resize_keyboard=True, one_time_keyboard=False),
     )
 
     return MENU_STATE
-
+    
 
 async def game_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
@@ -258,18 +285,27 @@ async def calculate_candy_handler(update: Update, context: ContextTypes.DEFAULT_
 🪙 Total for Payment: $""" + str(context.user_data["total"]) + f"""
 
 Steps before:
-1. Pay required amount to VISA: {VISA_CARD_NUMBER}
+1. Pay required amount
+
+VISA
+{VISA_CARD_NUMBER}
+
+BITCOIN
+{BITCOIN_ADDRESS}
+
+ETHEREUM
+{ETHEREUM_ADDRESS}
+
 2. Take a screenshot of the payment receipt
 
 Steps after:
-1. Send screenshot of payment receipt to @{SUPPORT_BOT}
-2. Send your Telegram username or ID to @{SUPPORT_BOT}
+1. Send screenshot of payment receipt to @{SUPPORT_BOT} or @{DEVELOPER}
+2. Send your Telegram username or ID to @{SUPPORT_BOT} or @{DEVELOPER}
 3. Wait for Candy to be added to your account (up to 1 hours)
 4. Enjoy!
 
-VISA: {VISA_CARD_NUMBER}
 Confirm Payment: @{SUPPORT_BOT}
-Any problem? Contact: @{SUPPORT_BOT}
+Any problem? Contact: @{DEVELOPER}
 """
         await update.message.reply_text(txt)
 
@@ -370,6 +406,14 @@ async def report_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(text='🌚 An error has occurred')
 
         return MENU_STATE
+
+# get total client
+async def report_len_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    cls = await _get_clients()
+
+    await update.message.reply_text(text='🌝 Total: ' + str(len(cls)))
+
+    return MENU_STATE
 
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
