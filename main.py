@@ -111,7 +111,18 @@ def _post_candy(user):
     except Exception as e:
         print(e)
         return False
+    
 
+@sync_to_async
+def _upd_client_referral(user_id, referral):
+    try:
+        models.TGClient.objects.filter(tg_id=user_id).update(referral=referral)
+
+        return True
+    except Exception as e:
+        print(e)
+        return False
+    
 
 @sync_to_async
 def _get_client_candy(user_id):
@@ -168,13 +179,22 @@ def is_joined(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg =  update.message.text
     user = update.effective_user
+
     context.user_data['id'] = user.id
     context.user_data['username'] = user.username
 
     if not await _is_client(context.user_data['id']):
         await _post_client(context.user_data)
         await _post_candy(context.user_data)
+
+        ref_id = msg.split()[1] if len(msg.split()) > 1 else ""
+
+        if ref_id:
+            user = await _get_client(ref_id)
+            ref_qty = user[0]['referral']
+            await _upd_client_referral(ref_id, ref_qty + 1)
 
     await update.message.reply_text('🌝 Was-sap, ' + user.first_name + '!')
     

@@ -4,7 +4,7 @@ from .models import TGClient, Candy, Games, UserAdmin
 
 
 class TGClientAdmin(admin.ModelAdmin):
-    list_display = ('tg_id', 'username', 'created_at')
+    list_display = ('tg_id', 'username', 'referral', 'created_at')
     list_filter = ('created_at',)
     search_fields = ('tg_id', 'username',)
 
