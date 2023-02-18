@@ -4,7 +4,7 @@ from django.db import models
 class TGClient(models.Model):
     tg_id = models.CharField(max_length=255, blank=True, null=True)
     username = models.CharField(max_length=255, blank=True, null=True)
-    referral = models.CharField(max_length=255, blank=True, null=True)
+    referral = models.CharField(max_length=255, blank=True, null=True, default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

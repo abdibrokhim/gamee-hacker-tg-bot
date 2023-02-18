@@ -75,7 +75,7 @@ def get_time():
     time = datetime.datetime.now().strftime("%H:%M:%S")
     return time
 
-
+@sync_to_async
 async def _is_admin(username, password):
     try:
         return models.UserAdmin.objects.filter(username=username, password=password).exists()
@@ -192,9 +192,12 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ref_id = msg.split()[1] if len(msg.split()) > 1 else ""
 
         if ref_id:
-            user = await _get_client(ref_id)
+            user = await _get_client(context.user_data['id'])
             ref_qty = user[0]['referral']
-            await _upd_client_referral(ref_id, ref_qty + 1)
+            await _upd_client_referral(context.user_data['id'], int(ref_qty) + 1)
+            
+            candy_qty = await _get_client_candy(context.user_data['id'])
+            await _upd_candy_qty(context.user_data['id'], int(candy_qty[0]['quantity']) + 2)
 
     await update.message.reply_text('🌝 Was-sap, ' + user.first_name + '!')
     
