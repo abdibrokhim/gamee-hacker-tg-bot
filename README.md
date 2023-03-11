@@ -1,6 +1,8 @@
 # gamee-hacker-tg-bot
 ## The Most Advandced Telegram Game (Gamee) Hacker Bot
 
+Try now: https://t.me/igameehacker_bot
+
 Inspired by: https://github.com/mohamadkhalaj/Gamee-Hacker
 
 # Steps
@@ -97,5 +99,7 @@ python3 main.py
 # Important
 
 If u like this project, just give it STAR
-Modify, update, add new features if u want, all WELCOMED!
+
+# Open source
+Modify, update, add new features
 
