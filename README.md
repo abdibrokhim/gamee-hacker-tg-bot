@@ -99,3 +99,13 @@ python3 main.py
 If u like this project, just give it STAR
 Modify, update, add new features if u want, all WELCOMED!
 
+
+<br/>
+
+
+All donations are Greatly Appreciated! 💛 
+
+
+<a href="https://www.buymeacoffee.com/abdibrokhim" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=abdibrokhim&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+
+<br/>

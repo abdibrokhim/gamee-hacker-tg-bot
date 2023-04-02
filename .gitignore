@@ -1,3 +1,10 @@
 .idea
 venv
+env
+.env
 __pycache__
+.dccache
+.DS_Store
+app/__pycache__
+config/__pycache__
+.vscode
